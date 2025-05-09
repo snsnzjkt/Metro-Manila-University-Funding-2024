@@ -1,1 +1,263 @@
+{% extends "base.html" %}
 
+{% block title %}Metro Manila Research Funding Map{% endblock %}
+
+{% block extra_head %}
+<style>
+    #map-container {
+        height: 80vh;
+        width: 100%;
+        position: relative;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        overflow: hidden;
+    }
+    .loading {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h1>Metro Manila Research Funding Map</h1>
+        <p class="lead">Interactive visualization of research funding distribution across universities in Metro Manila for 2024</p>
+    </div>
+    <div class="col-md-4 text-end">
+        <div class="btn-group">
+            <button id="download-btn" class="btn btn-outline-primary">Download Map</button>
+            <button id="stats-btn" class="btn btn-outline-secondary">View Statistics</button>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div id="map-container">
+            <div class="loading">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="mt-2">Loading map data...</p>
+            </div>
+            <iframe id="map-frame" style="width:100%; height:100%; border:none;"></iframe>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Map Legend</h5>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><span class="badge bg-warning">&nbsp;</span> Public Universities</li>
+                    <li class="list-group-item"><span class="badge bg-purple">&nbsp;</span> Private Universities</li>
+                    <li class="list-group-item">Circle size represents funding amount</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">About This Visualization</h5>
+                <p>This interactive map shows research funding distribution across 16 major universities in Metro Manila. The data is compiled from DOST, CHED, and university reports for 2024.</p>
+                <p>Use the controls in the top-right corner of the map to switch between different visualization modes:</p>
+                <ul>
+                    <li><strong>Universities</strong>: Shows all universities with circle size representing funding amount</li>
+                    <li><strong>Funding Heatmap</strong>: Displays funding concentration areas</li>
+                    <li><strong>University Clusters</strong>: Groups universities that are close together</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Statistics Modal -->
+<div class="modal fade" id="statsModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Research Funding Statistics</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="stats-loading" class="text-center">
+                    <div class="spinner-border text-primary mb-3" role="status"></div>
+                    <p>Loading statistics...</p>
+                </div>
+                <div id="stats-content" class="d-none">
+                    <!-- Statistics will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Load the map
+        const mapFrame = document.getElementById('map-frame');
+        const loadingDiv = document.querySelector('.loading');
+        
+        mapFrame.onload = function() {
+            loadingDiv.style.display = 'none';
+        };
+        
+        mapFrame.src = '/map';
+        
+        // Download map functionality
+        document.getElementById('download-btn').addEventListener('click', function() {
+            const mapWindow = window.open('/map');
+            setTimeout(() => {
+                mapWindow.print();
+            }, 1000);
+        });
+        
+        // Statistics modal
+        const statsModal = new bootstrap.Modal(document.getElementById('statsModal'));
+        const statsContent = document.getElementById('stats-content');
+        const statsLoading = document.getElementById('stats-loading');
+        
+        document.getElementById('stats-btn').addEventListener('click', function() {
+            statsModal.show();
+            statsContent.classList.add('d-none');
+            statsLoading.classList.remove('d-none');
+            
+            fetch('/api/universities')
+                .then(response => response.json())
+                .then(data => {
+                    // Calculate statistics
+                    const totalUniversities = data.length;
+                    const publicCount = data.filter(u => u.Type === 'Public').length;
+                    const privateCount = data.filter(u => u.Type === 'Private').length;
+                    const totalFunding = data.reduce((sum, u) => sum + u.Funding, 0);
+                    const totalOutput = data.reduce((sum, u) => sum + u.ResearchOutput, 0);
+                    const avgPublicFunding = data
+                        .filter(u => u.Type === 'Public')
+                        .reduce((sum, u) => sum + u.Funding, 0) / publicCount;
+                    const avgPrivateFunding = data
+                        .filter(u => u.Type === 'Private')
+                        .reduce((sum, u) => sum + u.Funding, 0) / privateCount;
+                    
+                    // Sort universities by funding
+                    const sortedUniversities = [...data].sort((a, b) => b.Funding - a.Funding);
+                    
+                    // Create statistics HTML
+                    let statsHTML = `
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card mb-3">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Summary Statistics</h5>
+                                        <ul class="list-group list-group-flush">
+                                            <li class="list-group-item">Total Universities: ${totalUniversities}</li>
+                                            <li class="list-group-item">Public Universities: ${publicCount}</li>
+                                            <li class="list-group-item">Private Universities: ${privateCount}</li>
+                                            <li class="list-group-item">Total Funding: ₱${totalFunding} million</li>
+                                            <li class="list-group-item">Total Research Output: ${totalOutput} papers</li>
+                                            <li class="list-group-item">Avg. Public University Funding: ₱${avgPublicFunding.toFixed(2)} million</li>
+                                            <li class="list-group-item">Avg. Private University Funding: ₱${avgPrivateFunding.toFixed(2)} million</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card mb-3">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Top 5 Funded Universities</h5>
+                                        <table class="table table-sm">
+                                            <thead>
+                                                <tr>
+                                                    <th>University</th>
+                                                    <th>Type</th>
+                                                    <th>Funding (₱M)</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                    `;
+                    
+                    // Add top 5 universities
+                    sortedUniversities.slice(0, 5).forEach(uni => {
+                        statsHTML += `
+                            <tr>
+                                <td>${uni.University}</td>
+                                <td>${uni.Type}</td>
+                                <td>${uni.Funding}</td>
+                            </tr>
+                        `;
+                    });
+                    
+                    statsHTML += `
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">All Universities by Funding</h5>
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>Rank</th>
+                                                    <th>University</th>
+                                                    <th>Type</th>
+                                                    <th>City</th>
+                                                    <th>Funding (₱M)</th>
+                                                    <th>Research Output</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                    `;
+                    
+                    // Add all universities
+                    sortedUniversities.forEach((uni, index) => {
+                        statsHTML += `
+                            <tr>
+                                <td>${index + 1}</td>
+                                <td>${uni.University}</td>
+                                <td>${uni.Type}</td>
+                                <td>${uni.City}</td>
+                                <td>${uni.Funding}</td>
+                                <td>${uni.ResearchOutput}</td>
+                            </tr>
+                        `;
+                    });
+                    
+                    statsHTML += `
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    // Update the modal content
+                    statsContent.innerHTML = statsHTML;
+                    statsLoading.classList.add('d-none');
+                    statsContent.classList.remove('d-none');
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                    statsContent.innerHTML = `<div class="alert alert-danger">Error loading statistics: ${error.message}</div>`;
+                    statsLoading.classList.add('d-none');
+                    statsContent.classList.remove('d-none');
+                });
+        });
+    });
+</script>
+{% endblock %}
