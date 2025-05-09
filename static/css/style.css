@@ -1,1 +1,104 @@
+/* Custom styling for the application */
 
+/* General styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+    background-color: #f8f9fa;
+}
+
+h1, h2, h3 {
+    font-weight: 700;
+}
+
+/* Badge color for private universities */
+.bg-purple {
+    background-color: #8B5CF6;
+}
+
+/* Map container styling */
+#map-container {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+}
+
+/* Card styling */
+.card {
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+/* Navbar customization */
+.navbar {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.5rem;
+}
+
+/* Footer styling */
+footer {
+    margin-top: 50px;
+    padding: 20px 0;
+}
+
+/* Button styling */
+.btn-outline-primary {
+    border-color: #4F46E5;
+    color: #4F46E5;
+}
+
+.btn-outline-primary:hover {
+    background-color: #4F46E5;
+    color: white;
+}
+
+.btn-outline-secondary {
+    border-color: #6B7280;
+    color: #6B7280;
+}
+
+.btn-outline-secondary:hover {
+    background-color: #6B7280;
+    color: white;
+}
+
+/* Statistics table styling */
+.table {
+    font-size: 0.9rem;
+}
+
+.table th {
+    background-color: #f8f9fa;
+}
+
+/* Modal customization */
+.modal-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+}
+
+/* Loading spinner customization */
+.spinner-border {
+    color: #4F46E5;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 1.8rem;
+    }
+    
+    .btn-group {
+        margin-top: 15px;
+        display: flex;
+        justify-content: center;
+    }
+}
