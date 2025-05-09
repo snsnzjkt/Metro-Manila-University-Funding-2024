@@ -27,22 +27,6 @@ def generate_research_map():
     folium.TileLayer('Stamen Toner', name='Stamen Toner').add_to(metro_manila_map)
     folium.TileLayer('Stamen Terrain', name='Stamen Terrain').add_to(metro_manila_map)
     
-    # Add title
-    title_html = '''
-        <div style="position: fixed; 
-            top: 10px; left: 50px; width: 600px; height: 90px; 
-            background-color:white; border-radius: 5px; border: 2px solid grey;
-            z-index: 9999; font-family: Arial; padding: 10px">
-            <h2 style="margin: 0; text-align: center">Federal Funding for Research and Development in Metro Manila (2024)</h2>
-            <h4 style="margin: 5px 0 0 0; text-align: center">
-                Each circle represents a university: 
-                <span style="color:#F59E0B; font-weight: bold">●</span> Public 
-                <span style="color:#8B5CF6; font-weight: bold">●</span> Private
-            </h4>
-        </div>
-    '''
-    metro_manila_map.get_root().html.add_child(folium.Element(title_html))
-    
     # Create feature groups for different layers
     universities_layer = folium.FeatureGroup(name="Universities")
     heatmap_layer = folium.FeatureGroup(name="Funding Heatmap")
@@ -115,43 +99,6 @@ def generate_research_map():
     universities_layer.add_to(metro_manila_map)
     heatmap_layer.add_to(metro_manila_map)
     cluster_layer.add_to(metro_manila_map)
-    
-    # Add a custom legend
-    legend_html = '''
-    <div style="position: fixed; 
-        bottom: 50px; left: 50px; 
-        width: 220px; 
-        height: auto; 
-        border:2px solid grey; 
-        z-index:9999; 
-        font-size:14px;
-        background-color:white; 
-        padding: 10px; 
-        border-radius: 5px;
-        font-family: Arial">
-        <p style="font-weight:bold; margin-bottom:8px">University Type</p>
-        <div style="margin-bottom:5px">
-            <span style="color:#F59E0B; font-size:16px">●</span> Public University
-        </div>
-        <div style="margin-bottom:10px">
-            <span style="color:#8B5CF6; font-size:16px">●</span> Private University
-        </div>
-        <p style="font-weight:bold; margin-bottom:8px">Circle Size Legend</p>
-        <div style="margin-bottom:5px">
-            <span style="display:inline-block; width:10px; height:10px; border-radius:50%; background-color:gray"></span> ₱50 million
-        </div>
-        <div style="margin-bottom:5px">
-            <span style="display:inline-block; width:20px; height:20px; border-radius:50%; background-color:gray"></span> ₱250 million
-        </div>
-        <div style="margin-bottom:5px">
-            <span style="display:inline-block; width:30px; height:30px; border-radius:50%; background-color:gray"></span> ₱500 million
-        </div>
-        <p style="font-size:10px; margin-top:10px">
-            Source: DOST, CHED, and university reports (2024)
-        </p>
-    </div>
-    '''
-    metro_manila_map.get_root().html.add_child(folium.Element(legend_html))
     
     # Add layer control
     folium.LayerControl(position='topright').add_to(metro_manila_map)

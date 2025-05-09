@@ -3,14 +3,31 @@
 {% block title %}Metro Manila Research Funding Map{% endblock %}
 
 {% block extra_head %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
+    body {
+        font-family: 'Poppins', sans-serif;
+    }
     #map-container {
-        height: 80vh;
+        height: 65vh; /* Reduced map height */
         width: 100%;
         position: relative;
-        border: 1px solid #ddd;
+        border: 1px solid black;
         border-radius: 5px;
         overflow: hidden;
+        padding: 0; /* Remove any padding */
+        margin-bottom: 0; /* Remove bottom margin */
+    }
+    #map-frame {
+        width: 100%;
+        height: 100%;
+        border: none;
+        display: block; /* Ensure block display */
+        position: absolute; /* Position absolute to fill container */
+        top: 0;
+        left: 0;
     }
     .loading {
         position: absolute;
@@ -18,15 +35,79 @@
         left: 50%;
         transform: translate(-50%, -50%);
         text-align: center;
+        z-index: 1;
+    }
+    .university-legend {
+        background-color: #f8f9fa;
+        padding: 15px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+        text-align: center;
+        border: 1px solid #ddd;
+    }
+    .circle-legend {
+        display: inline-block;
+        margin: 0 10px;
+    }
+    .public-circle {
+        color: #F59E0B; /* Same amber color as in the map */
+        font-size: 20px;
+        margin-right: 5px;
+        font-weight: bold;
+    }
+    .private-circle {
+        color: #8B5CF6; /* Same purple color as in the map */
+        font-size: 20px;
+        margin-right: 5px;
+        font-weight: bold;
+    }
+    .badge.bg-purple {
+        background-color: #8B5CF6;
+    }
+    .badge.bg-amber {
+        background-color: #F59E0B;
+    }
+    .legend-card {
+        height: 100%; /* Make the legend card take full height */
+        margin: 0; /* Remove margin */
+    }
+    .legend-card .card-body {
+        padding: 1rem; /* Reduce padding */
+        height: 100%; /* Make card body fill entire height */
+        display: flex;
+        flex-direction: column;
+    }
+    .funding-size-reference {
+        margin-top: 15px;
+        flex-grow: 1; /* Allow this section to grow */
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+    .about-card {
+        margin-top: 20px;
+    }
+    /* Ensure no extra vertical space in list groups */
+    .list-group-flush .list-group-item {
+        padding-top: 8px;
+        padding-bottom: 8px;
+    }
+    /* Ensure columns align properly with no extra spaces */
+    .row.map-row {
+        margin: 0; /* Remove row margin */
+    }
+    .row.map-row > [class*="col-"] {
+        padding: 0 10px; /* Reduce column padding */
     }
 </style>
 {% endblock %}
 
 {% block content %}
+<!-- Title Section -->
 <div class="row mb-4">
     <div class="col-md-8">
-        <h1>Metro Manila Research Funding Map</h1>
-        <p class="lead">Interactive visualization of research funding distribution across universities in Metro Manila for 2024</p>
+        <h1 style="color: black;">Metro Manila Research Funding Map</h1>
+        <p class="lead" style="color: black;">Interactive visualization of research funding distribution across universities in Metro Manila for 2024</p>
     </div>
     <div class="col-md-4 text-end">
         <div class="btn-group">
@@ -36,8 +117,11 @@
     </div>
 </div>
 
-<div class="row">
-    <div class="col-12">
+
+<!-- Map and Legend Side by Side -->
+<div class="row map-row">
+    <!-- Map Container - Now only takes 8 columns -->
+    <div class="col-md-8">
         <div id="map-container">
             <div class="loading">
                 <div class="spinner-border text-primary" role="status">
@@ -45,26 +129,47 @@
                 </div>
                 <p class="mt-2">Loading map data...</p>
             </div>
-            <iframe id="map-frame" style="width:100%; height:100%; border:none;"></iframe>
+            <iframe id="map-frame"></iframe>
+        </div>
+    </div>
+    
+    <!-- Legend - Now takes 4 columns beside the map -->
+    <div class="col-md-4">
+        <div class="card legend-card">
+            <div class="card-body">
+                <h5 class="card-title">Map Legend</h5>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><span class="badge bg-amber">&nbsp;</span> Public Universities</li>
+                    <li class="list-group-item"><span class="badge bg-purple">&nbsp;</span> Private Universities</li>
+                    <li class="list-group-item">Circle size represents funding amount</li>
+                </ul>
+                <div class="funding-size-reference">
+                    <h5 class="mb-2">Funding Size Reference:</h5>
+                    <div class="d-flex align-items-center mb-1">
+                        <div style="width: 10px; height: 10px; border-radius: 50%; background-color: gray; margin-right: 30px;"></div>
+                        <span>₱50 million</span>
+                    </div>
+                    <div class="d-flex align-items-center mb-1">
+                        <div style="width: 20px; height: 20px; border-radius: 50%; background-color: gray; margin-right: 20px;"></div>
+                        <span>₱250 million</span>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <div style="width: 30px; height: 30px; border-radius: 50%; background-color: gray; margin-right: 10px;"></div>
+                        <span>₱500 million</span>
+                    </div>
+                    <div class="mt-auto"> <!-- Push to bottom of flex container -->
+                        <p class="text-muted mt-3 small mb-0">Source: DOST, CHED, and university reports (2024)</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
-<div class="row mt-4">
-    <div class="col-md-4">
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">Map Legend</h5>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item"><span class="badge bg-warning">&nbsp;</span> Public Universities</li>
-                    <li class="list-group-item"><span class="badge bg-purple">&nbsp;</span> Private Universities</li>
-                    <li class="list-group-item">Circle size represents funding amount</li>
-                </ul>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-8">
-        <div class="card">
+<!-- About Section - Full width below map and legend -->
+<div class="row">
+    <div class="col-12">
+        <div class="card about-card">
             <div class="card-body">
                 <h5 class="card-title">About This Visualization</h5>
                 <p>This interactive map shows research funding distribution across 16 major universities in Metro Manila. The data is compiled from DOST, CHED, and university reports for 2024.</p>
@@ -122,7 +227,7 @@
             }, 1000);
         });
         
-        // Statistics modal
+        // Statistics modal functionality (same as before)
         const statsModal = new bootstrap.Modal(document.getElementById('statsModal'));
         const statsContent = document.getElementById('stats-content');
         const statsLoading = document.getElementById('stats-loading');
@@ -135,7 +240,7 @@
             fetch('/api/universities')
                 .then(response => response.json())
                 .then(data => {
-                    // Calculate statistics
+                     // Calculate statistics
                     const totalUniversities = data.length;
                     const publicCount = data.filter(u => u.Type === 'Public').length;
                     const privateCount = data.filter(u => u.Type === 'Private').length;

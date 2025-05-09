@@ -1,10 +1,10 @@
 /* Custom styling for the application */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
 /* General styles */
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: #333;
-    background-color: #f8f9fa;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(90deg,rgba(243, 237, 255, 1) 0%, rgba(255, 201, 201, 1) 50%, rgba(255, 255, 255, 1) 100%);
 }
 
 h1, h2, h3 {
@@ -18,8 +18,46 @@ h1, h2, h3 {
 
 /* Map container styling */
 #map-container {
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    margin-bottom: 30px;
+    height: 80vh;
+    width: 100%;
+    position: relative;
+    border: 1px solid black;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+/* University legend styling */
+.university-legend {
+    background-color: #f8f9fa;
+    padding: 10px 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    text-align: center;
+    font-family: 'Poppins', sans-serif;
+}
+
+.university-legend .public-circle {
+    color: #ffc107; /* warning color for public universities */
+    font-size: 18px;
+    margin-right: 5px;
+}
+
+.university-legend .private-circle {
+    color: #6f42c1; /* purple color for private universities */
+    font-size: 18px;
+    margin-right: 5px;
+}
+
+/* Custom badge color */
+.bg-purple {
+    background-color: #6f42c1;
 }
 
 /* Card styling */
@@ -51,23 +89,23 @@ footer {
 
 /* Button styling */
 .btn-outline-primary {
-    border-color: #4F46E5;
-    color: #4F46E5;
+    border-color: black;
+    color: black;
 }
 
 .btn-outline-primary:hover {
-    background-color: #4F46E5;
-    color: white;
+    background: palevioletred;
+    color: #fff;
 }
 
 .btn-outline-secondary {
-    border-color: #6B7280;
-    color: #6B7280;
+    border-color: black;
+    color: black;
 }
 
 .btn-outline-secondary:hover {
-    background-color: #6B7280;
-    color: white;
+    background: palevioletred;
+    color: #fff;
 }
 
 /* Statistics table styling */
