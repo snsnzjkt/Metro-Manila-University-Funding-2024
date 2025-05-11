@@ -1,14 +1,14 @@
 /* Custom styling for the application */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Poppins:wght@300;400;500;600;700&display=swap');
 
 /* General styles */
 body {
     font-family: 'Poppins', sans-serif;
-    background: linear-gradient(90deg,rgba(243, 237, 255, 1) 0%, rgba(255, 201, 201, 1) 50%, rgba(255, 255, 255, 1) 100%);
+    background-color: #FFEECF
 }
 
-h1, h2, h3 {
-    font-weight: 700;
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Instrument Serif', serif;
 }
 
 /* Badge color for private universities */
@@ -18,13 +18,26 @@ h1, h2, h3 {
 
 /* Map container styling */
 #map-container {
-    height: 80vh;
+    height: 100%;
     width: 100%;
     position: relative;
     border: 1px solid black;
     border-radius: 5px;
     overflow: hidden;
 }
+
+#map-frame {
+    width: 100%;
+    height: calc(100% + 30px); /* Extend the iframe to hide the attribution */
+    border: none;
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 0;
+    padding: 0;
+}
+
 
 .loading {
     position: absolute;
@@ -65,20 +78,44 @@ h1, h2, h3 {
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     transition: transform 0.3s ease;
-}
-
-.card:hover {
-    transform: translateY(-5px);
+    background-color: #e0ece5;
 }
 
 /* Navbar customization */
 .navbar {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #083D77;
+    color: #FFEECF !important;
+
 }
 
 .navbar-brand {
-    font-weight: 700;
-    font-size: 1.5rem;
+    font-family: 'Instrument Serif', serif;
+    font-weight: 400;
+    font-size: 2.0rem;
+    color: #FFEECF !important;
+}
+
+.nav-item{
+        color: #FFEECF !important;
+
+}
+
+.navbar-nav .nav-link {
+    color: #FFEECF !important;
+}
+
+.navbar-nav .nav-link:hover {
+    color: #fff !important; 
+}
+
+/* Navbar toggler (sandwich menu) styling */
+.navbar-toggler {
+    border-color: #FFEECF !important;
+}
+
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='%23FFEECF' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
 }
 
 /* Footer styling */
@@ -88,14 +125,22 @@ footer {
 }
 
 /* Button styling */
+
+.btn{
+    font-family: 'Instrument Serif', serif;
+    font-weight: 400;
+    font-size: 1.5rem;
+}
+
 .btn-outline-primary {
     border-color: black;
     color: black;
 }
 
 .btn-outline-primary:hover {
-    background: palevioletred;
+    background: #66A182;
     color: #fff;
+    border-color: black;
 }
 
 .btn-outline-secondary {
@@ -104,7 +149,7 @@ footer {
 }
 
 .btn-outline-secondary:hover {
-    background: palevioletred;
+    background: #66A182;
     color: #fff;
 }
 
@@ -117,6 +162,8 @@ footer {
     background-color: #f8f9fa;
 }
 
+/* Map Styling */
+
 /* Modal customization */
 .modal-header {
     background-color: #f8f9fa;
@@ -125,7 +172,7 @@ footer {
 
 /* Loading spinner customization */
 .spinner-border {
-    color: #4F46E5;
+    color: #6f42c1;
 }
 
 /* Responsive adjustments */

@@ -24,8 +24,6 @@ def generate_research_map():
     
     # Add alternative tile layers
     folium.TileLayer('openstreetmap', name='OpenStreetMap').add_to(metro_manila_map)
-    folium.TileLayer('Stamen Toner', name='Stamen Toner').add_to(metro_manila_map)
-    folium.TileLayer('Stamen Terrain', name='Stamen Terrain').add_to(metro_manila_map)
     
     # Create feature groups for different layers
     universities_layer = folium.FeatureGroup(name="Universities")
