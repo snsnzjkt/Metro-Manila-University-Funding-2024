@@ -10,10 +10,6 @@ An interactive web application visualizing research funding distribution across 
 - **Statistics Dashboard**: View comprehensive statistics and rankings of university funding
 - **Responsive Design**: Works on various screen sizes and devices
 
-## Demo
-
-View the live demo: [Metro Manila Research Funding Map]()
-
 ## Requirements
 
 To run this application locally, you'll need:
