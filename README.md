@@ -2,8 +2,6 @@
 
 An interactive web application visualizing research funding distribution across universities in Metro Manila.
 
-![Metro Manila Research Funding Map Preview](static/img/preview.png)
-
 ## Features
 
 - **Interactive Map**: Displays universities across Metro Manila with funding information
